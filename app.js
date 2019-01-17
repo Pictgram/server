@@ -10,8 +10,7 @@ require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-const postRouter = require('./routes/post')
+const postRouter = require('./routes/posts')
 
 var commentRouter = require('./routes/comment');
 
