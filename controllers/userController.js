@@ -55,16 +55,16 @@ class Controller {
         let username = req.body.username
         let password = req.body.password
         let twitterUsername = req.body.twitterUsername
-
+        let image = req.file.cloudStoragePublicUrl
         let user = {}
 
-        if (!email || !username || !password) {
+        if (!email ) {
             res.status(400).json({
                 msg: `Name, email, and password must be filled`
             })
         } else {
             user = {
-                name, email, followers, username, password, twitterUsername
+                name, email, followers, username, password, twitterUsername, image
             }
 
             for (let i in user) {
@@ -72,6 +72,8 @@ class Controller {
                     delete user[i]
                 }
             }
+
+            console.log(user, 'ini yg mau do update')
 
             User.findById(req.current)
                 .then(found => {

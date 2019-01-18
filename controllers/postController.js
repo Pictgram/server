@@ -16,7 +16,7 @@ module.exports = {
 
     allPost: function (req, res) {
         Post
-         .find({})
+         .find({}).populate('UserId')
          .then((post) => {
             post.sort(function(a, b){
                 return a.createdAt == b.createdAt ? 0 : +(a.createdAt > b.createdAt) || -1;
@@ -36,10 +36,13 @@ module.exports = {
     },
 
     userPost: function (req, res) {
+        console.log('masuk controller')
+        console.log(req.params)
         let UserId = ObjectId(req.params.userId)
         Post
-         .find({UserId})
+         .find({UserId: req.current})
          .then((posts) => {
+             console.log(posts)
              if (posts) {
                  res.status(200).json({
                      msg: 'success get posts of one user',
@@ -89,10 +92,8 @@ module.exports = {
         // console.log(req.file.cloudStoragePublicUrl,'ffffffffffff')
         let insert = {
             image: req.file.cloudStoragePublicUrl,
-            UserId: req.body.userId,
+            UserId: req.current,
             caption: req.body.caption,
-            UserId: req.body.userId
-
         }
         Post
          .create(insert)
@@ -172,7 +173,6 @@ module.exports = {
             process.env.accesstokensecret, //user secret
             { status: ` @${uname} 
             want to share this image:
-            
              ${image} ` },
             function(err, data) {
                 if(err) {
