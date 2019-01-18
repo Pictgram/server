@@ -172,7 +172,6 @@ module.exports = {
             process.env.accesstokensecret, //user secret
             { status: ` @${uname} 
             want to share this image:
-            
              ${image} ` },
             function(err, data) {
                 if(err) {
