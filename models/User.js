@@ -37,6 +37,9 @@ var userSchema = new Schema({
     },
     image: {
         type: String
+    },
+    twitterUsername: {
+        type: String
     }
 }, {
     timestamps: true
