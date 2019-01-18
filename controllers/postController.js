@@ -164,15 +164,14 @@ module.exports = {
     },
     shareTwit: function (req, res) {
         let image = req.body.imageUrl
-        let uname = req.body.uname
+        // let uname = req.body.uname
 
         //buat ngetweetny:
         oauth.post(
         'https://api.twitter.com/1.1/statuses/update.json',
             process.env.accesstoken, //user token
             process.env.accesstokensecret, //user secret
-            { status: ` @${uname} 
-            want to share this image:
+            { status: ` Pictgram want to share this image:
              ${image} ` },
             function(err, data) {
                 if(err) {
