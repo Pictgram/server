@@ -91,6 +91,8 @@ module.exports = {
             image: req.file.cloudStoragePublicUrl,
             UserId: req.body.userId,
             caption: req.body.caption,
+            UserId: req.body.userId
+
         }
         Post
          .create(insert)
