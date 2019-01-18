@@ -76,7 +76,8 @@ module.exports = {
 
     createPost: function (req, res) {
         console.log(req.body)
-        console.log(req.file)
+        console.log(req.file, "==========")
+        console.log(req.file.cloudStoragePublicUrl,'ffffffffffff')
         let insert = {
             image: req.body.image,
             UserId: req.current.id,
