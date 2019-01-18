@@ -1,12 +1,12 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const {compare, decode} = require('../helpers')
+const { compare, decode } = require('../helpers')
 
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
 class Controller {
-    static create (req, res) {
+    static create(req, res) {
         let name = req.body.name
         let email = req.body.email
         let followers = []
@@ -14,7 +14,7 @@ class Controller {
         let password = req.body.password
         let user = {}
 
-        if ( !email || !username || !password) {
+        if (!email || !username || !password) {
             res.status(400).json({
                 msg: `Name, email, and password must be filled`
             })
@@ -23,7 +23,7 @@ class Controller {
                 name, email, followers, username, password
             }
 
-            for(let i in user ) {
+            for (let i in user) {
                 if (!user[i]) {
                     delete user[i]
                 }
@@ -34,7 +34,7 @@ class Controller {
                     res.status(201).json({
                         msg: `Success create user`,
                         data: created,
-                        token: jwt.sign({id: created._id}, process.env.JWT)
+                        token: jwt.sign({ id: created._id }, process.env.JWT)
                     })
                 })
                 .catch(err => {
@@ -47,7 +47,7 @@ class Controller {
         }
     }
 
-    static update (req, res) {
+    static update(req, res) {
         let name = req.body.name
         let email = req.body.email
         let followers = req.body.followers
@@ -55,7 +55,7 @@ class Controller {
         let password = req.body.password
         let user = {}
 
-        if ( !email || !username || !password) {
+        if (!email || !username || !password) {
             res.status(400).json({
                 msg: `Name, email, and password must be filled`
             })
@@ -64,13 +64,13 @@ class Controller {
                 name, email, followers, username, password
             }
 
-            for(let i in user ) {
+            for (let i in user) {
                 if (!user[i]) {
                     delete user[i]
                 }
             }
 
-            User.findById(req.current)  
+            User.findById(req.current)
                 .then(found => {
                     found.set(user)
                     return found.save()
@@ -90,7 +90,7 @@ class Controller {
         }
     }
 
-    static findOne (req, res) {
+    static findOne(req, res) {
         User.findById(req.current)
             .then(found => {
                 res.status(200).json({
@@ -105,7 +105,7 @@ class Controller {
             })
     }
 
-    static login (req, res) {
+    static login(req, res) {
         let email = req.body.email
         let password = req.body.password
 
@@ -114,7 +114,7 @@ class Controller {
                 msg: `All field must be filled`
             })
         } else {
-            User.findOne({email})
+            User.findOne({ email })
                 .then(found => {
                     if (!found) {
                         res.status(404).json({
@@ -128,12 +128,13 @@ class Controller {
                         } else {
                             res.status(200).json({
                                 msg: `Success login`,
-                                token: jwt.sign({id: found._id}, process.env.JWT)
+                                userData: found,
+                                token: jwt.sign({ id: found._id }, process.env.JWT)
                             })
                         }
                     }
                 })
-                .catch(err =>{
+                .catch(err => {
                     res.status(500).json({
                         msg: `Internal server error`,
                         error: err.message
@@ -142,21 +143,24 @@ class Controller {
         }
     }
 
-    static gooSi (req, res) {
+    static gooSi(req, res) {
         async function verify() {
             const ticket = await client.verifyIdToken({
-                idToken: token,
-                audience: process.env.CLIENT_ID, 
+                idToken: req.body.token,
+                audience: process.env.CLIENT_ID,
             });
             const payload = ticket.getPayload();
             // const userid = payload['sub'];
 
-            User.findOne({email: payload.email})
+            User.findOne({ email: payload.email })
                 .then(found => {
                     if (found) {
+                        console.log(`harusnya udah send nih disini`);
+
                         res.status(200).json({
                             msg: `Success login`,
-                            token: jwt.sign({id: found._id}, process.env.JWT)
+                            token: jwt.sign({ id: found._id }, process.env.JWT),
+                            payload: payload
                         })
                     } else {
                         return User.create({
@@ -166,19 +170,26 @@ class Controller {
                     }
                 })
                 .then(created => {
-                    res.status(200).json({
-                        msg: `Success register and login`,
-                        token: jwt.sign({id: created._id}, process.env.JWT)
-                    })
+                    
+                    if (created) {
+                        res.status(200).json({
+                            msg: `Success register and login`,
+                            token: jwt.sign({ id: created._id }, process.env.JWT),
+                            payload: payload
+                        })
+                    }
+
                 })
                 .catch(err => {
+                    console.log(err);
+
                     res.status(500).json({
                         msg: `Internal server error`,
                         error: err.message
                     })
                 })
-          }
-          verify().catch(console.error);
+        }
+        verify().catch(console.error);
     }
 }
 
