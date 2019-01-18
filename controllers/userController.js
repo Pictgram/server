@@ -128,6 +128,7 @@ class Controller {
                         } else {
                             res.status(200).json({
                                 msg: `Success login`,
+                                userData: found,
                                 token: jwt.sign({id: found._id}, process.env.JWT)
                             })
                         }
