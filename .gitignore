@@ -1,0 +1,7 @@
+node_modules
+.env
+<<<<<<< HEAD
+keyfile.json
+=======
+keyfile.json
+>>>>>>> 39a9e5c4194e4257ae47c8019a83f1095a2ca78a
