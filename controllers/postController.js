@@ -1,6 +1,15 @@
 const Post = require('../models/Post')
 const ObjectId = require('mongoose').Types.ObjectId
-
+const OAuth = require('oauth');
+var oauth = new OAuth.OAuth(
+    'https://api.twitter.com/oauth/request_token',
+    'https://api.twitter.com/oauth/access_token',
+    process.env.consumerApiKey, //consumer key
+    process.env.consumerApiSecretKey, //secret
+    '1.0A',
+    null,
+    'HMAC-SHA1'
+);
 
 
 module.exports = {
@@ -75,11 +84,12 @@ module.exports = {
     },
 
     createPost: function (req, res) {
-        console.log(req.body)
-        console.log(req.file, "==========")
-        console.log(req.file.cloudStoragePublicUrl,'ffffffffffff')
+        // console.log(req.body)
+        // console.log(req.file, "==========")
+        // console.log(req.file.cloudStoragePublicUrl,'ffffffffffff')
         let insert = {
             image: req.file.cloudStoragePublicUrl,
+            UserId: req.body.userId,
             caption: req.body.caption,
             UserId: req.body.userId
 
@@ -150,5 +160,33 @@ module.exports = {
              })
          })
 
+    },
+    shareTwit: function (req, res) {
+        let image = req.body.imageUrl
+        let uname = req.body.uname
+
+        //buat ngetweetny:
+        oauth.post(
+        'https://api.twitter.com/1.1/statuses/update.json',
+            process.env.accesstoken, //user token
+            process.env.accesstokensecret, //user secret
+            { status: ` @${uname} 
+            want to share this image:
+            
+             ${image} ` },
+            function(err, data) {
+                if(err) {
+                    res.status(500).json({
+                        msg: `Internal server error`,
+                        error: err.message
+                    })
+                } else {
+                    console.log('success tweet!!!!!!!!!!!!')
+                    res.status(201).json({
+                        msg: `Success tweet`
+                    })
+                }
+            }
+        )
     }
 } 
