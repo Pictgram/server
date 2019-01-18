@@ -12,6 +12,7 @@ class Controller {
         let followers = []
         let username = req.body.username
         let password = req.body.password
+        let twitterUsername = req.body.twitterUsername
         let user = {}
 
         if (!email || !username || !password) {
@@ -20,7 +21,7 @@ class Controller {
             })
         } else {
             user = {
-                name, email, followers, username, password
+                name, email, followers, username, password, twitterUsername
             }
 
             for (let i in user) {
@@ -53,6 +54,8 @@ class Controller {
         let followers = req.body.followers
         let username = req.body.username
         let password = req.body.password
+        let twitterUsername = req.body.twitterUsername
+
         let user = {}
 
         if (!email || !username || !password) {
@@ -61,7 +64,7 @@ class Controller {
             })
         } else {
             user = {
-                name, email, followers, username, password
+                name, email, followers, username, password, twitterUsername
             }
 
             for (let i in user) {

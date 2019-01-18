@@ -3,7 +3,9 @@ var salt = bcrypt.genSaltSync(10);
 const jwt = require('jsonwebtoken')
 const {Storage} = require('@google-cloud/storage')
 const CLOUD_BUCKET = process.env.CLOUD_BUCKET
-console.log(Storage)
+
+// console.log(Storage)
+
 const storage = new Storage({
   projectId: process.env.GCLOUD_PROJECT,
   keyFilename: process.env.KEYFILE_PATH
