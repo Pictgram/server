@@ -75,6 +75,8 @@ module.exports = {
     },
 
     createPost: function (req, res) {
+        console.log(req.body)
+        console.log(req.file)
         let insert = {
             image: req.body.image,
             UserId: req.current.id,

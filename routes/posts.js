@@ -4,7 +4,7 @@ const postController = require('../controllers/postController')
 
 
 Router.get('/', postController.allPost)
-Router.post('/',image.multer.single('image'),images.sendUploadToGCS, postController.createPost)
+Router.post('/',image.multer.single('image'), postController.createPost)
 Router.get('/:userId', postController.userPost)
 Router.get('/:id', postController.onePost)
 Router.delete('/:id', postController.destroy)
