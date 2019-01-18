@@ -80,8 +80,9 @@ module.exports = {
         console.log(req.file.cloudStoragePublicUrl,'ffffffffffff')
         let insert = {
             image: req.file.cloudStoragePublicUrl,
-            UserId: ObjectId("12352145cd62"),
             caption: req.body.caption,
+            UserId: req.body.userId
+
         }
         Post
          .create(insert)

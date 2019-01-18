@@ -156,7 +156,7 @@ class Controller {
                 .then(found => {
                     if (found) {
                         console.log(`harusnya udah send nih disini`);
-
+                        payload._id = found._id
                         res.status(200).json({
                             msg: `Success login`,
                             token: jwt.sign({ id: found._id }, process.env.JWT),
